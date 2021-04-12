@@ -5,23 +5,6 @@ import { StyleSheet, Button, View, Modal, Text } from "react-native";
 import Scanner from "./src/components/Scanner";
 import List from "./src/components/List";
 
-function convertToObject(sourceString) {
-  const result = {};
-  
-  if(sourceString === '') {
-    return {};
-  }
-  
-  sourceString
-    .split('\n')
-    .map(sentence => sentence.split(':'))
-    .map((value) => {
-    result[value[0]] = value[1];
-  });
-  
-  return result;
-}
-
 export default function App() {
   const [modalVisible, setModalVisible] = React.useState(false);
   
@@ -36,6 +19,10 @@ export default function App() {
   
   return (
     <View style={styles.container}>
+      {data.length !== 0 &&(
+        <List data={data} />
+      )}
+      
       <Modal
         visible={modalVisible}
         transparent={true}
@@ -43,10 +30,6 @@ export default function App() {
         onRequestClose={() => setModalVisible(false)}
       >
         <View style={styles.modal}>
-          {data.length > 0 &&(
-            <List data={convertToObject(data)}/>
-          )}
-          
           <Scanner onCodeScanned={onCodeScanned} />
           
           <Button title="Close" onPress={() => setModalVisible(false)} />
@@ -63,9 +46,11 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
+    height: "80%",
+    marginHorizontal: 20,
+    backgroundColor: "#fff",
   },
   modal: {
     flex: 1,
