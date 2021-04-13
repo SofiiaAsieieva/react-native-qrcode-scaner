@@ -1,26 +1,76 @@
 import { StatusBar } from "expo-status-bar";
-import React from "react";
-import { StyleSheet, Button, View, Modal, Text } from "react-native";
+import React, { useEffect } from "react";
+import { StyleSheet, Button, View, Modal } from "react-native";
 
 import Scanner from "./src/components/Scanner";
 import List from "./src/components/List";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function App() {
   const [modalVisible, setModalVisible] = React.useState(false);
   
-  const [type, setType] = React.useState("");
-  const [data, setData] = React.useState("");
+  const [users, setUsers] = React.useState([]);
   
-  const onCodeScanned = (type, data) => {
-    setType(type);
-    setData(data);
+  const onCodeScanned = (data) => {
+    addUser(data);
     setModalVisible(false);
+  };
+  
+  const save = async () => {
+    try {
+      await AsyncStorage.setItem("savedUsers", JSON.stringify(users))
+      console.log(JSON.stringify(users))
+    } catch (err) {
+      console.log(err)
+    }
+  };
+  
+  const addUser = (user) => {
+    const firstAndLastName = user.N.split(';');
+    const userInfo = {
+      id: new Date().getTime(),
+      name: firstAndLastName.join(' '),
+      email: user.EMAIL,
+      phone: user.TEL,
+    };
+  
+    setUsers(prevUsers =>([...prevUsers, userInfo]));
+  };
+  
+  const load = async  () => {
+    try {
+      let users = await AsyncStorage.getItem("savedUsers");
+      
+      if (users !== null) {
+        setUsers(JSON.parse(users));
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  
+  useEffect(() => {
+    load();
+  }, []);
+  
+  useEffect(() => {
+    save();
+  }, [users])
+  
+  const removeUser = (userId) => {
+    const filterUsers = users.filter(user => user.id !== userId);
+    
+    setUsers(filterUsers);
   };
   
   return (
     <View style={styles.container}>
-      {data.length !== 0 &&(
-        <List data={data} />
+      
+      {users.length !== 0 &&(
+        <List
+          users={users}
+          removeUser={removeUser}
+        />
       )}
       
       <Modal

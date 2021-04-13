@@ -1,6 +1,24 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, StyleSheet, Button } from "react-native";
+import { Text, View, StyleSheet } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
+
+function convertToObject(sourceString) {
+  const result = {};
+  const copy = sourceString;
+  
+  if(sourceString === '') {
+    return {};
+  }
+  
+  copy
+    .split('\n')
+    .map(sentence => sentence.split(':'))
+    .map((value) => {
+      result[value[0]] = value[1];
+    });
+  
+  return result;
+}
 
 export default function Scanner({onCodeScanned}) {
   const [hasPermission, setHasPermission] = useState(null);
@@ -13,9 +31,9 @@ export default function Scanner({onCodeScanned}) {
     })();
   }, []);
   
-  const handleBarCodeScanned = ({ type, data }) => {
+  const handleBarCodeScanned = ({ data }) => {
     setScanned(true);
-    onCodeScanned(type, data);
+    onCodeScanned(convertToObject(data));
   };
   
   if (hasPermission === null) {
@@ -35,16 +53,9 @@ export default function Scanner({onCodeScanned}) {
       }}
     >
       <BarCodeScanner
-        onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+        onBarCodeScanned={scanned ? false : handleBarCodeScanned}
         style={StyleSheet.absoluteFillObject}
       />
-      
-      {scanned && (
-        <Button
-          title={"Repetir Escaneamento"}
-          onPress={() => setScanned(false)}
-        />
-      )}
     </View>
   );
 }
