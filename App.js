@@ -50,7 +50,7 @@ export default function App() {
 
   useEffect(() => {
     save();
-  }, [users])
+  }, [users]);
 
   const removeUser = (userId) => {
     const filterUsers = users.filter(user => user.id !== userId);
