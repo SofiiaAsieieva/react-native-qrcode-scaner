@@ -1,28 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, StyleSheet } from "react-native";
+import { Text, View, StyleSheet, ToastAndroid } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
+import { receiveDataFromQrCode } from "../helpes";
 
-function convertToObject(sourceString) {
-  const result = {};
-  const copy = sourceString;
-  
-  if(sourceString === '') {
-    return {};
-  }
-  
-  copy
-    .split('\n')
-    .map(sentence => sentence.split(':'))
-    .map((value) => {
-      result[value[0]] = value[1];
-    });
-  
-  return result;
-}
-
-export default function Scanner({onCodeScanned}) {
+export default function Scanner({onCodeScanned, setModalVisible}) {
   const [hasPermission, setHasPermission] = useState(null);
-  const [scanned, setScanned] = useState(false);
   
   useEffect(() => {
     (async () => {
@@ -31,9 +13,24 @@ export default function Scanner({onCodeScanned}) {
     })();
   }, []);
   
+  const toastWithDurationHandler = () => {
+    ToastAndroid.showWithGravity(
+      'Incorrectly entered user data',
+      ToastAndroid.LONG,
+      ToastAndroid.CENTER,
+    );
+  };
+  
+  
   const handleBarCodeScanned = ({ data }) => {
-    setScanned(true);
-    onCodeScanned(convertToObject(data));
+    const userInfo = receiveDataFromQrCode(data);
+    
+    if(!userInfo) {
+      toastWithDurationHandler();
+      setModalVisible(false);
+    } else {
+      onCodeScanned(userInfo);
+    }
   };
   
   if (hasPermission === null) {
@@ -45,17 +42,21 @@ export default function Scanner({onCodeScanned}) {
   
   return (
     <View
-      style={{
-        width: "100%",
-        height: "90%",
-        flexDirection: "column",
-        justifyContent: "flex-end",
-      }}
+      style={styles.container}
     >
       <BarCodeScanner
-        onBarCodeScanned={scanned ? false : handleBarCodeScanned}
+        onBarCodeScanned={handleBarCodeScanned}
         style={StyleSheet.absoluteFillObject}
       />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    width: "100%",
+    height: "90%",
+    flexDirection: "column",
+    justifyContent: "flex-end",
+  }
+});
