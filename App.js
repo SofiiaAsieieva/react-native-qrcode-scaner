@@ -1,16 +1,15 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect } from 'react';
-import { StyleSheet, Button, View, Modal, Text } from 'react-native';
+import { StyleSheet, Button, View, Modal } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Scanner from './src/components/Scanner';
 import Cards from './src/components/Cards';
-import SplashScreenDemo from './src/components/SplashScreen';
+import * as SplashScreen from 'expo-splash-screen';
 
 export default function App() {
   const [modalVisible, setModalVisible] = React.useState(false);
   const [users, setUsers] = React.useState([]);
-  const [splashScreen, setSplashScreen] = React.useState(false);
 
   const onCodeScanned = (data) => {
     addUser(data);
@@ -43,7 +42,10 @@ export default function App() {
 
   useEffect(() => {
     load();
-    timerSplashScreen();
+
+    setTimeout(async () => {
+      await SplashScreen.hideAsync();
+    }, 1000);
   }, []);
 
   useEffect(() => {
@@ -56,54 +58,41 @@ export default function App() {
     setUsers(filterUsers);
   };
 
-  const timerSplashScreen = () => {
-    setTimeout(() => {
-      setSplashScreen(true);
-    }, 1000)
-  }
-
   return (
     <View style={styles.container}>
-
-      {!splashScreen && <SplashScreenDemo />}
-
-      {splashScreen && (
-        <View>
-          <Modal
-            visible={modalVisible}
-            transparent={true}
-            animationType="slide"
-            onRequestClose={() => setModalVisible(false)}
-            style={styles.modal}
-          >
-            <View style={styles.modalScanner}>
-              <Scanner
-                onCodeScanned={onCodeScanned}
-                setModalVisible={setModalVisible}
-              />
-
-              <Button
-                title="Close"
-                onPress={() => setModalVisible(false)}
-              />
-            </View>
-          </Modal>
-
-          {users.length !== 0 &&(
-            <Cards
-              users={users}
-              removeUser={removeUser}
-            />
-          )}
-
-          <StatusBar style="auto" />
-
+      <Modal
+        visible={modalVisible}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setModalVisible(false)}
+        style={styles.modal}
+      >
+        <View style={styles.modalScanner}>
+          <Scanner
+            onCodeScanned={onCodeScanned}
+            setModalVisible={setModalVisible}
+          />
+      
           <Button
-            title="Start"
-            onPress={() => setModalVisible(true)}
+            title="Close"
+            onPress={() => setModalVisible(false)}
           />
         </View>
+      </Modal>
+  
+      {users.length !== 0 &&(
+        <Cards
+          users={users}
+          removeUser={removeUser}
+        />
       )}
+  
+      <StatusBar style="auto" />
+  
+      <Button
+        title="Start"
+        onPress={() => setModalVisible(true)}
+      />
     </View>
   );
 }
