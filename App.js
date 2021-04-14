@@ -18,9 +18,9 @@ export default function App() {
 
   const save = async () => {
     try {
-      await AsyncStorage.setItem("savedUsers", JSON.stringify(users))
+      await AsyncStorage.setItem("savedUsers", JSON.stringify(users));
     } catch (err) {
-      console.log(err)
+      console.log(err);
     }
   };
 

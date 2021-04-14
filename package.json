@@ -5,7 +5,14 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "eject": "expo eject"
+    "eject": "expo eject",
+    "lint": "eslint --ext .ts,.tsx,.js,.jsx ./src/ --fix"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.15.2",
@@ -23,9 +30,15 @@
     "expo-splash-screen": "~0.8.1"
   },
   "devDependencies": {
+    "@mate-academy/eslint-config-react": "0.0.5",
+    "@mate-academy/stylelint-config": "0.0.9",
     "@babel/core": "^7.9.0",
     "@expo/vector-icons": "^12.0.4",
+    "eslint": "^7.24.0",
+    "eslint-plugin-react": "^7.23.2",
+    "eslint-plugin-react-native": "^3.10.0",
     "expo-font": "^9.0.0",
+    "husky": "^6.0.0",
     "react-native-snackbar": "^2.4.0"
   },
   "private": true
