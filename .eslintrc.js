@@ -2,6 +2,7 @@ module.exports = {
   extends: '@mate-academy/eslint-config-react',
   rules: {
     'no-unused-vars': 'warn',
+    'semi': ["error", "always"],
     'react/prop-types': 'warn',
     'no-trailing-spaces': 'warn',
     'jsx-a11y/no-autofocus': 0,

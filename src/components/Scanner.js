@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, ToastAndroid } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
-import { receiveDataFromQrCode } from '../helpes';
+import { receiveDataFromQrCode } from '../receiveDataFromQrCode';
 
 export default function Scanner({ onCodeScanned, setModalVisible }) {
   const [hasPermission, setHasPermission] = useState(null);

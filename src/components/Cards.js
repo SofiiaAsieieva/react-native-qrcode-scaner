@@ -7,14 +7,14 @@ export default function Cards({ users, removeUser }) {
       <ScrollView>
         {users.map(user => (
           <View key={user.id} style={styles.cards}>
-            
+
             <View style={styles.cardsContainerName}>
               <Text>name: </Text>
               <Text style={styles.cardsName}>
                 {user.name}
               </Text>
             </View>
-            
+
             <Text>{`email: ${user.email}`}</Text>
             <Text>{`phone: ${user.phone}`}</Text>
             <Button
@@ -41,12 +41,12 @@ const styles = StyleSheet.create({
     color: '#666',
     backgroundColor: '#eaeaea',
   },
-  
+
   cardsName: {
     fontWeight: '700',
     fontSize: 16,
   },
-  
+
   cardsContainerName: {
     flexDirection: 'row',
   },
