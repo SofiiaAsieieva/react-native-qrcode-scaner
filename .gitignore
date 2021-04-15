@@ -1,6 +1,5 @@
 node_modules
 .expo-shared
-assets
 app.json
 babel.config.js
 package-lock.json
