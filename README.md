@@ -4,6 +4,7 @@ An app that can scan a QR code with encoded full usernames,
 email address and phone number. After scanning the QR code,
 a squat is created that contains this information.
 All maps are saved locally, so you don't lose data when you close the app.
+[Link expo.io](https://expo.io/@sofiiaasieieva/projects/testTask)
 
 ![til](./assets/overview.gif)
 
